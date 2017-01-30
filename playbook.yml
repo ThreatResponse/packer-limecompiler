@@ -1,0 +1,118 @@
+- hosts: localhost
+  name: configuration
+  user: ec2-user
+  become: yes
+  become_user: root
+  gather_facts: true
+
+  roles:
+    - role: rvm_io.ruby
+      sudo: True
+      rvm1_user: 'ec2-user'
+      rvm1_rvm_version: 'stable'
+      rvm1_rvm_check_for_updates: True
+      rvm1_rubies:
+        - '2.3.0'
+
+  tasks:
+          -   name: Install python setup tools
+              yum: name=python-setuptools
+              tags: docker
+
+          -   name: Install git
+              yum: name=git
+              tags: docker
+
+          -   name: Install Pypi
+              easy_install: name=pip
+              tags: docker
+
+          -   name: Install docker-py
+              pip: name=docker-py
+              tags: docker
+
+          -   name: Install Docker
+              yum: name=docker state=latest
+              tags: docker
+
+          -   name: Make sure Docker is running
+              service: name=docker state=running
+              tags: docker
+
+          -   name: Install -> Docker-Compose
+              sudo: yes
+              get_url:
+                url=https://github.com/docker/compose/releases/download/1.10.0/docker-compose-Linux-x86_64
+                dest=/usr/local/bin/docker-compose
+                mode=0755
+
+          -  name: setup directory for limecompiler
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/opt/limecompiler
+               state=directory
+               mode=770
+
+          -  name: checkout latest from git of Limecompiler
+             git:
+               repo=https://github.com/ThreatResponse/lime-compiler.git
+               dest=/opt/limecompiler
+               update=yes
+
+          -  name: setup directory build
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/opt/limecompiler/build
+               state=directory
+               mode=770
+
+          -  name: setup directory for modules
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/opt/limecompiler/build/modules
+               state=directory
+               mode=770
+
+          -  name: setup directory for archive
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/opt/limecompiler/archive
+               state=directory
+               mode=770
+
+          -  name: ensure exec permissions
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/home/ec2-user/01-sync.sh
+               mode=664
+
+          -  name: ensure exec permissions
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/home/ec2-user/02-build.sh
+               mode=664
+
+          -  name: ensure exec permissions
+             sudo: yes
+             file:
+               owner=ec2-user
+               group=ec2-user
+               path=/home/ec2-user/03-sync.sh
+               mode=664
+
+          - name: Adding existing user ec2-user to group docker
+            user: name=ec2-user
+                  groups=docker
+                  append=yes
