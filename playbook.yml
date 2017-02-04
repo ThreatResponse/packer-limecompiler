@@ -27,7 +27,7 @@
               tags: docker
 
           -   name: Make sure Docker is running
-              service: name=docker state=running
+              service: name=docker state=running enabled=yes
               tags: docker
 
           -   name: Install -> Docker-Compose
