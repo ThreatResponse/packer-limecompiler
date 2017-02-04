@@ -5,6 +5,7 @@
 cd /opt/limecompiler
 bundle
 gem build lime-compiler.gemspec
+gem install lime-compiler-*.gem
 #Actually build the modules
 
 if [ `echo $GPG_SIGN` == 1 ]; then
