@@ -146,8 +146,6 @@
              sudo: yes
              group:
                name=docker
-             notify:
-               - restart docker
 
           -  name: add fedora user to docker group
              sudo: yes
