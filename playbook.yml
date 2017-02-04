@@ -47,12 +47,12 @@
                 - gnupg2
                 - docker-engine
                 - patch
+                - redhat-rpm-config
                 - libyaml-devel
                 - glibc-headers
                 - autoconf
                 - gcc-c++
                 - glibc-devel
-                - patch
                 - readline-devel
                 - zlib-devel
                 - libffi-devel
