@@ -9,6 +9,7 @@ Resources:
           Value: LimeCompiler
   LimeCompilerVPC:
     Type: "AWS::EC2::VPC"
+    DependsOn: LimeCompilerInternetGateway
     Properties:
       CidrBlock: "10.0.0.0/16"
       EnableDnsSupport: True
@@ -50,7 +51,7 @@ Resources:
         Ref: LimeCompilerVPC
   LimeCompilerRouteTable:
     Type: "AWS::EC2::RouteTable"
-    DependsOn: LimeCompilerInternetGateway
+    DependsOn: LimeCompilerVPC
     Properties:
       VpcId:
         Ref: LimeCompilerVPC
@@ -59,7 +60,7 @@ Resources:
           Value: LimeCompiler
   DefaultRoute:
     Type: AWS::EC2::Route
-    DependsOn: LimeCompilerInternetGateway
+    DependsOn: LimeCompilerRouteTable
     Properties:
       RouteTableId:
         Ref: LimeCompilerRouteTable
@@ -86,7 +87,7 @@ Resources:
     DependsOn: LimeCompilerSecGroup
     Properties:
       AvailabilityZone: 'us-west-2b'
-      ImageId: ami-ab9d25cb
+      ImageId: ami-0ce3586c
       IamInstanceProfile: lime-compiler
       InstanceInitiatedShutdownBehavior: terminate
       InstanceType: m4.large
@@ -95,7 +96,7 @@ Resources:
         - Ref: LimeCompilerSecGroup
       SubnetId:
         Ref: LimeCompilerSubnet2
-      UserData: IyEvYmluL2Jhc2gKc2V0IC1lIC14CgovaG9tZS9lYzItdXNlci8wMC10YWdzLTEwLWVudi5zaAovaG9tZS9lYzItdXNlci8wMS1zeW5jLnNoCi9ob21lL2VjMi11c2VyLzAyLWJ1aWxkLnNoCg==
+      #UserData: IyEvYmluL2Jhc2gKc2V0IC1lIC14CgovaG9tZS9mZWRvcmEvMDAtdGFncy0xMC1lbnYuc2gKL2hvbWUvZmVkb3JhLzAxLXN5bmMuc2gKL2hvbWUvZmVkb3JhLzAyLWJ1aWxkLnNoCg==
       Tags:
         - Key: GPG_HOME
           Value: 'build_gpg_home'

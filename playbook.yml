@@ -1,26 +1,17 @@
 - hosts: localhost
   name: configuration
-  user: ec2-user
+  user: fedora
   become: yes
   become_user: root
   gather_facts: true
 
-  roles:
-    - role: rvm_io.ruby
-      sudo: True
-      rvm1_user: 'ec2-user'
-      rvm1_rvm_version: 'stable'
-      rvm1_rvm_check_for_updates: True
-      rvm1_rubies:
-        - '2.3.0'
-
   tasks:
           -   name: Install python setup tools
-              yum: name=python-setuptools
+              dnf: name=python-setuptools
               tags: docker
 
           -   name: Install git
-              yum: name=git
+              dnf: name=git
               tags: docker
 
           -   name: Install Pypi
@@ -32,7 +23,7 @@
               tags: docker
 
           -   name: Install Docker
-              yum: name=docker state=latest
+              dnf: name=docker state=latest
               tags: docker
 
           -   name: Make sure Docker is running
@@ -46,11 +37,41 @@
                 dest=/usr/local/bin/docker-compose
                 mode=0755
 
+          - name: Install list of packages
+            dnf: name={{item}} state=installed
+            with_items:
+                - which
+                - findutils
+                - procps-ng
+                - git
+                - gnupg2
+                - docker-engine
+                - patch
+                - libyaml-devel
+                - glibc-headers
+                - autoconf
+                - gcc-c++
+                - glibc-devel
+                - patch
+                - readline-devel
+                - zlib-devel
+                - libffi-devel
+                - openssl-devel
+                - make
+                - bzip2
+                - automake
+                - libtool
+                - bison
+                - sqlite-devel
+                - ruby
+                - ruby-devel
+                - libxml2-devel
+
           -  name: setup directory for limecompiler
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
+               owner=fedora
+               group=fedora
                path=/opt/limecompiler
                state=directory
                mode=770
@@ -64,8 +85,8 @@
           -  name: setup directory build
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
+               owner=fedora
+               group=fedora
                path=/opt/limecompiler/build
                state=directory
                mode=770
@@ -73,8 +94,8 @@
           -  name: setup directory for modules
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
+               owner=fedora
+               group=fedora
                path=/opt/limecompiler/build/modules
                state=directory
                mode=770
@@ -82,8 +103,8 @@
           -  name: setup directory for archive
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
+               owner=fedora
+               group=fedora
                path=/opt/limecompiler/archive
                state=directory
                mode=770
@@ -91,28 +112,29 @@
           -  name: ensure exec permissions
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
-               path=/home/ec2-user/01-sync.sh
-               mode=664
+               owner=fedora
+               group=fedora
+               path=/home/fedora/01-sync.sh
+               mode=770
 
           -  name: ensure exec permissions
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
-               path=/home/ec2-user/02-build.sh
-               mode=664
+               owner=fedora
+               group=fedora
+               path=/home/fedora/02-build.sh
+               mode=774
 
           -  name: ensure exec permissions
              sudo: yes
              file:
-               owner=ec2-user
-               group=ec2-user
-               path=/home/ec2-user/03-sync.sh
-               mode=664
+               owner=fedora
+               group=fedora
+               path=/home/fedora/03-sync.sh
+               mode=770
 
-          - name: Adding existing user ec2-user to group docker
-            user: name=ec2-user
-                  groups=docker
-                  append=yes
+          - name: Open up permissions on the docker sock
+            shell: chmod 777 /var/run/docker.sock
+
+        #  - name: Set SELinux to Permissive for build
+        #    selinux: policy=targeted state=permissive

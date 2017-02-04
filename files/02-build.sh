@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/home/ec2-user/00-tags-to-env.sh
+/home/fedora/00-tags-to-env.sh
 
 cd /opt/limecompiler
 bundle
