@@ -133,8 +133,19 @@
                path=/home/fedora/03-sync.sh
                mode=770
 
-          - name: Open up permissions on the docker sock
-            shell: chmod 777 /var/run/docker.sock
+          -  name: create docker group
+             sudo: yes
+             group:
+               name=docker
+             notify:
+               - restart docker
+
+          -  name: add fedora user to docker group
+             sudo: yes
+             user:
+               name=fedora
+               groups=docker
+               append=yes
 
         #  - name: Set SELinux to Permissive for build
         #    selinux: policy=targeted state=permissive
