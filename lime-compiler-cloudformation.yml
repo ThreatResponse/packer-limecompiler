@@ -98,11 +98,15 @@ Resources:
         Ref: LimeCompilerSubnet2
       #UserData: IyEvYmluL2Jhc2gKc2V0IC1lIC14CgovaG9tZS9mZWRvcmEvMDAtdGFncy0xMC1lbnYuc2gKL2hvbWUvZmVkb3JhLzAxLXN5bmMuc2gKL2hvbWUvZmVkb3JhLzAyLWJ1aWxkLnNoCg==
       Tags:
+        - Key: GPG_FINGERPRINT
+          Value: '80DA92CB09161F241C8F9BC918BA980367172B17'
         - Key: GPG_HOME
           Value: 'build_gpg_home'
         - Key: GPG_SIGN
           Value: 0
         - Key: KMS_REGION
+          Value: 'us-west-2'
+        - Key: S3_REGION
           Value: 'us-west-2'
         - Key: AES_KEY_EXPORT_PATH
           Value: 's3://threatresponse.limecompiler.configs/aes_export.aes'

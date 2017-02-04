@@ -10,7 +10,7 @@ gem install lime-compiler-*.gem
 
 if [ `echo $GPG_SIGN` == 1 ]; then
     echo "Spinning up with GPG Signing"
-    lime-compiler -c /opt/limecompiler/conf/config.yml -m /opt/limecompiler/build/ -a /opt/limecompiler/archive/ --gpg-sign --gpg-id $GPG_FINGERPRINT --gpg-home $GPG_HOME --kms-region $KMS_REGION --aes-key-export $AES_KEY_EXPORT_PATH --gpg-key-export $GPG_KEY_EXPORT_PATH --rm-gpg-home
+    lime-compiler -c /opt/limecompiler/conf/config.yml -m /opt/limecompiler/build/ -a /opt/limecompiler/archive/ --gpg-sign --gpg-id $GPG_FINGERPRINT --gpg-home $GPG_HOME --kms-region $KMS_REGION --s3-region $S3_REGION --aes-key-export $AES_KEY_EXPORT_PATH --gpg-key-export $GPG_KEY_EXPORT_PATH --rm-gpg-home
     exit 0
 fi
 
